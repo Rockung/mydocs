@@ -1,18 +1,22 @@
+## Set up local environment
+
+```cmd
+npm install -g @angular/cli
+ng new my-app
+ng serve --open
+```
+
 ## Commands
 
+```cmd
 ng generate component xyz
-
 ng add @angular/material
-
 ng add one_dependency
-
 ng test
-
 ng build --prod
+```
 
-
-
-## Angular's Template Syntax
+## Template Syntax
 
 * *ngFor
 * *ngIf

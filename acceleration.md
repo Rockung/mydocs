@@ -24,3 +24,9 @@ npm config set registry https://registry.npm.taobao.org
 ## Rust
 
 http://520code.net/index.php/archives/42/
+
+
+
+## Homebrew
+
+https://blog.csdn.net/msatergz/article/details/93241764

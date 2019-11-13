@@ -29,4 +29,6 @@ http://520code.net/index.php/archives/42/
 
 ## Homebrew
 
+https://www.phpdever.com/2019/08/02/homebrew-replace-aliyun
+
 https://blog.csdn.net/msatergz/article/details/93241764

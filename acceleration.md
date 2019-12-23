@@ -2,7 +2,37 @@
 
 ## Python
 
+**Command Line**
+
+```cmd
 pip3 install -i https://mirrors.aliyun.com/pypi/simple/ xxxx
+```
+
+**Linux系统**
+
+```bash
+mkdir ~/.pip
+cat > ~/.pip/pip.conf << EOF
+[global]
+trusted-host=mirrors.aliyun.com
+index-url=https://mirrors.aliyun.com/pypi/simple/
+EOF
+```
+
+**Windows系统**
+
+首先在window的文件夹窗口输入 ： %APPDATA%
+
+然后创建pip文件夹
+
+最后创建pip.ini文件，写入如下内容
+
+```ini
+[global]
+index-url = https://mirrors.aliyun.com/pypi/simple/
+[install]
+trusted-host=mirrors.aliyun.com
+```
 
 ## Nodejs
 
@@ -24,8 +54,6 @@ npm config set registry https://registry.npm.taobao.org
 ## Rust
 
 http://520code.net/index.php/archives/42/
-
-
 
 ## Homebrew
 

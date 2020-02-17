@@ -1,9 +1,11 @@
 # **Dart Language**
 ## **Language samples**
 
+This collection is not exhaustive -- it's just a brief introduction to the language for people who like to learn by example.
+
 ### Hello World
 
-Every app has a ***main()*** function. To display text on the console, you can use the top-level ***print*** function.
+Every app has a ***main()*** function. To display text on the console, you can use the top-level ***print()*** function.
 
 ```dart
 void main() {
@@ -13,7 +15,7 @@ void main() {
 
 ### Variables
 
-Even in type-safe Dart code, most variables don't need explicit types, thanks to type inference.
+Even in **type-safe** Dart code, most variables don't need explicit types, thanks to **type inference**.
 
 ```dart
 var name = 'Voyager I';
@@ -61,7 +63,10 @@ int fibonacci(int n) {
 var result = fibonacci(20);
 ```
 
-A shorthand ***=>***(arrow) syntax is handy for functions that contain a single statement. This syntax is especially useful when passing ***anonymous functions*** as arguments.
+**anonymous functions**
+
+* ***=>***: arrow syntax handy for functions that contain a single statement
+* especially useful when passed as arguments
 
 ```dart
 flybyObjects.where((name) => name.contains('turn').forEach(print));
@@ -96,7 +101,7 @@ import 'path/to/my_other_file.dart';
 
 ### Classes
 
-What consist of a class? **variables, properties, constructors, methods, getter/setter method.**
+What consist of a class? **fields, properties, constructors, methods, getter/setter method.**
 
 ```dart
 class Spacecraft {
@@ -141,6 +146,8 @@ voyager3.describe();
 
 ### Inheritance
 
+Dart has single inheritance.
+
 ```dart
 class Orbiter extends Spacecraft {
   num altitude;
@@ -170,7 +177,7 @@ class PilotedCraft extends Spacecraft with Piloted {
 }
 ```
 
-PilotedCraft now has the astronauts field as well as the describeCrew() method.
+PilotedCraft now has the **astronauts** field as well as the describeCrew() method.
 
 ### Interfaces and abstract classes
 
@@ -220,6 +227,8 @@ try {
   flybyObjects.clear();
 }
 ```
+
+Note that the code above is asynchronous; ***try*** works for both synchronous code and code in an ***async*** function.
 
 ### Async
 
@@ -275,7 +284,2075 @@ Stream<String> report(Spacecraft craft, Iterable<String> objects) async* {
 }
 ```
 
-## **Language tour**
+
+
+## Language tour
+
+The language tour show you how to use each major Dart feature, from variables and opertors to classes and libraries.
+
+### A basic program
+
+```dart
+// Define a function.
+printInteger(int aNumber) {
+  print('The number is $aNumber.'); // Print to console.
+}
+
+// This is where the app starts executing.
+main() {
+  var number = 42; // Declare and initialize a variable.
+  printInteger(number); // Call a function.
+}
+```
+
+### Important concepts
+
+Keep these facts and concepts in mind, as you learn about the Dart language.
+
+* Everything you can place in a variable is an object, and every object is an instance of a class
+  * even numbers, functions, and null
+  * all objects inherit from the ***Object*** class
+* Although Dart is strongly typed, type annotations are optional because Dart can infer types. When you want to explicitly say that no type is expected, use the special type ***dynamic***
+* Dart supports generic types, like ***List<int>*** or ***List<dynamic>***
+
+* Dart support top-level functions, as well as functions tied to a class or object (**static** and **instance ** methods, respectively). You can also create functions within functions (**nested** or **local** functions)
+
+* Dart support top-level variables, as well as variables tied to a class or object (**static** and **instance** variables). Instance variables are sometimes known as **fields** or **properties**.
+* Dart doesn't have the keywords public, protected, and private. If an identifier starts with an underscore (_), it's private to its library.
+* ***Identifiers*** can start with a letter or underscore (_), followed by any combination of those characters plus digits.
+* Dart has both **expression**(which have runtime values) and **statements**(which don't) . A statement often contains one or more expressions, but an expression can't directly contain a statement.
+  * condition ? expr1 : expr2 has a value of expr1 or expr2
+  * if-else statement has no value
+* Dart tools can report two kinds of problems: warnings and errors.
+  * warnings are just indications that your code might not work, but they don't prevent your program from executing
+  * errors can be either compile-time or run-time. A compile-time error prevents the code from executing at all; run-time error results in an exception being raised while the code executes
+
+### Variables
+
+Variables store references.
+
+Create a variable and initialize it
+
+```dart
+var name = 'Bob';
+```
+
+The type of the name variables is inferred to be String. If an object isn't restricted to a single type, specify the Object or dynamic type.
+
+```dart
+dynamic name = 'Bob';
+```
+
+Another option is to explicitly declare the type that would be inferred.
+
+```dart
+String name = 'Bob';
+```
+
+**Default value**
+
+Uninitialized variables have an initial value of ***null***.
+
+```dart
+int lineCount;
+assert(lineCount == null);
+```
+
+**final and const**
+
+
+
+### Built-in types
+
+The Dart language has special support for the following types: **numbers, strings, booleans, lists(arrays), sets, maps, runes(Unicode characters in a string), and symbols**.
+
+You can initialize an object of any of these special types using a literal. Some of the built-in types have their own constructors, you can use constructors to initialize variables.
+
+**Numbers**
+
+Dart numbers come in two flavors: int, double.
+
+* int: $-2^{63}$ ~$2^{63}-1$
+* double: 64-bit floating-point numbers
+
+Both int and double are subtypes of num. The num type includes basic operators such as +,-,/, and *, and is also where you'll find abs(), ceil(), and floor(), among other methods. Bitwise operators, such as >>, are defined in the int class.
+
+Number literals
+
+```dart
+// Integers are numbers without a decimal point
+var x = 1;
+var hex = 0xDEADBEEF;
+
+// If a number includes a decimal, it is a double
+var y = 1.1;
+var exponents = 1.42e5;
+```
+
+Turn a string into a number
+
+```dart
+// String -> int
+var one = int.parse('1');
+assert(one == 1);
+
+// String -> double
+var onePointOne = double.parse('1.1');
+assert(onePointOne == 1.1);
+
+// int -> String
+String oneAsString = 1.toString();
+assert(oneAsString == '1');
+
+// double -> String
+String piAsString = 3.14159.toStringAsFixed(2);
+assert(piAsString == '3.14');
+```
+
+The int type specified the traditional bitwise shift(<<, >>), AND(&), and OR(|) operators.
+
+```dart
+assert((3 << 1) == 6); // 0011 << 1 == 0110
+assert((3 >> 1) == 1); // 0011 >> 1 == 0001
+assert((3 | 4) == 7);  // 0011 | 0100 == 0111
+```
+
+Literal numbers are compile-time constants. Many arithmetic expressions are also compile-time constants, as long as their operands are compile-time constants that evaluate to numbers.
+
+```dart
+const msPerSecond = 1000;
+const secondsUntilRetry = 5;
+const msUntilRetry = secondsUntilRetry * msPerSecond;
+```
+
+**Strings**
+
+A Dart string is a sequence of UTF-16 code units. 
+
+You can use either single or double quotes to create a string.
+
+```dart
+var s1 = 'Single quotes work well for string literals.';
+var s2 = "Double quotes work just as well.";
+var s3 = 'It\'s easy to escape the string delimiter.';
+var s4 = "It's even easier to use the other delimiter.";
+```
+
+You can concatenate strings using adjacent string literals or the ***+*** operator.
+
+```dart
+var s1 = 'String '
+    'concatenation'
+    " works even over line breaks.";
+assert(s1 ==
+    'String concatenation works even over '
+        'line breaks.');
+
+var s2 = 'The + operator ' + 'works, as well.';
+assert(s2 == 'The + operator works, as well.');
+```
+
+To create a multi-line string, use a triple quote with either single or double quotation marks.
+
+```dart
+var s1 = '''
+You can create
+multi-line strings like this one.
+''';
+
+var s2 = """This is also a
+multi-line string.""";
+```
+
+You can create a "raw" string by prefixing it with **r**.
+
+```dart
+var s = r'In a raw string, not even \n gets special treatment.';
+```
+
+You can put the value of an expression inside a string. To get the string corresponding to an object, Dart calls the object's ***toString()*** method.
+
+```dart
+var s = 'string interpolation';
+
+assert('Dart has $s, which is very handy.' ==
+    'Dart has string interpolation, ' +
+        'which is very handy.');
+assert('That deserves all caps. ' +
+        '${s.toUpperCase()} is very handy!' ==
+    'That deserves all caps. ' +
+        'STRING INTERPOLATION is very handy!');
+```
+
+**Booleans**
+
+To represent boolean values, Dart has a type named ***bool***. Only two objects have type bool: the boolean literals ***true*** and ***false***, which are both compile-time constants.
+
+```dart
+// Check for an empty string.
+var fullName = '';
+assert(fullName.isEmpty);
+
+// Check for zero.
+var hitPoints = 0;
+assert(hitPoints <= 0);
+
+// Check for null.
+var unicorn;
+assert(unicorn == null);
+
+// Check for NaN.
+var iMeantToDoThis = 0 / 0;
+assert(iMeantToDoThis.isNaN);
+```
+
+**Lists**
+
+The most common collection is the array, or ordered group of objects. In Dart, arrays are ***List*** objects, so most people just call them ***lists***.
+
+Lists use zero-based indexing, where 0 is the index of the first element and list.length-1 is the index of the last element.
+
+```dart
+var list = [1, 2, 3];
+assert(list.length == 3);
+assert(list[1] == 2);
+
+list[1] = 1;
+assert(list[1] == 1);
+```
+
+To create a list that's a compile-time constant, add ***const*** before the list literal.
+
+```dart
+var constantList = const [1, 2, 3];
+// constantList[1] = 1; // Uncommenting this causes an error.
+```
+
+Use a ***spread operator(...)*** to insert all the elements of a list into another list.
+
+```dart
+var list = [1, 2, 3];
+var list2 = [0, ...list];
+assert(list2.length == 4);
+```
+
+To avoid exceptions, use a ***null-aware spread operator(...?)***.
+
+```dart
+var list;
+var list2 = [0, ...?list];
+assert(list2.length == 1);
+```
+
+Use ***collection if*** to create a list with three or four items in it.
+
+```dart
+var nav = [
+  'Home',
+  'Furniture',
+  'Plants',
+  if (promoActive) 'Outlet'
+];
+```
+
+Use ***collection for*** to manipulate the items of a list before adding them to another list.
+
+```dart
+var listOfInts = [1, 2, 3];
+var listOfStrings = [
+  '#0',
+  for (var i in listOfInts) '#$i'
+];
+assert(listOfStrings[1] == '#1');
+```
+
+**Sets**
+
+A set in Dart is an unordered collection of unique items. Dart support for sets is provided by set literals and the ***Set*** type.
+
+Use a set literal
+
+```dart
+var halogens = {'fluorine', 'chlorine', 'bromine', 'iodine', 'astatine'};
+```
+
+Create an empty set
+
+```dart
+var names = <String>{};
+// Set<String> names = {}; // This works, too.
+// var names = {}; // Creates a map of type Map<dynamic, dynamic>, not a set.
+```
+
+Add items to an existing set
+
+```dart
+var elements = <String>{};
+elements.add('fluorine');
+elements.addAll(halogens);
+```
+
+Get the number of items in the set
+
+```dart
+var elements = <String>{};
+elements.add('fluorine');
+elements.addAll(halogens);
+assert(elements.length == 5);
+```
+
+To create a set that's a compile-time constant, add ***const*** before the set literal
+
+```dart
+final constantSet = const {
+  'fluorine',
+  'chlorine',
+  'bromine',
+  'iodine',
+  'astatine',
+};
+// constantSet.add('helium'); // Uncommenting this causes an error.
+```
+
+Sets support spread operators(... and ...?) and collection ifs and fors, just like lists do.
+
+**Maps**
+
+In general, a map is an object that associates keys and values. Both keys and values can be any type of object. Each key occurs only once, but you can use the same value multiple times. Dart support for maps is provided by map literals and the ***Map*** type.
+
+Use map literals
+
+```dart
+var gifts = {
+  // Key:    Value
+  'first': 'partridge',
+  'second': 'turtledoves',
+  'fifth': 'golden rings'
+};
+
+var nobleGases = {
+  2: 'helium',
+  10: 'neon',
+  18: 'argon',
+};
+```
+
+Use a Map constructor
+
+```dart
+var gifts = Map();
+gifts['first'] = 'partridge';
+gifts['second'] = 'turtledoves';
+gifts['fifth'] = 'golden rings';
+
+var nobleGases = Map();
+nobleGases[2] = 'helium';
+nobleGases[10] = 'neon';
+nobleGases[18] = 'argon';
+```
+
+Add a new key-value pair to an existing map
+
+```dart
+var gifts = {'first': 'partridge'};
+gifts['fourth'] = 'calling birds'; // Add a key-value pair
+```
+
+Retrieve a value from a map
+
+```dart
+var gifts = {'first': 'partridge'};
+assert(gifts['first'] == 'partridge');
+```
+
+If you look for a key that isn't in a map, you get a null in return
+
+```dart
+var gifts = {'first': 'partridge'};
+assert(gifts['fifth'] == null);
+```
+
+Get the number of key-value pair in the map
+
+```dart
+var gifts = {'first': 'partridge'};
+gifts['fourth'] = 'calling birds';
+assert(gifts.length == 2);
+```
+
+To create a map that's a compile-time constant, add ***const*** before the map literal
+
+```dart
+final constantMap = const {
+  2: 'helium',
+  10: 'neon',
+  18: 'argon',
+};
+
+// constantMap[2] = 'Helium'; // Uncommenting this causes an error.
+```
+
+Maps support spread operators(... and ...?) and collection ifs and fors, just like lists do.
+
+**Runes and grapheme clusters**
+
+Unicode defines a unique numeric value for each letter, digit, and symbol used in all of the world's writing systems. Because a Dart string is a sequence of UTF-16 code units, expressing Unicode code points within a string requires special syntax. The usual way to express a Unicode code point is \uXXXX, where XXXX is a 4-digit hexadecimal value. for example,
+
+* heart character(♥)  is \u2665
+* laughing emoji (😆) is \u{1f600}
+
+If you need to read or write individual Unicode characters, use the **characters** getter defined on String by the character package.
+
+```dart
+import 'package:characters/characters.dart';
+
+var hi = 'Hi 🇩🇰';
+print(hi);
+print('The end of the string: ${hi.substring(hi.length - 1)}');
+print('The last character: ${hi.characters.last}\n');
+```
+
+**Symbols**
+
+A ***Symbol*** object represents an operator or identifier declared in a Dart program. 
+
+To get the symbol for an identifier, use a symbol literal, which is just **#** followed by the identifier.
+
+```dart
+#radix
+#bar
+```
+
+Symbol literals are compile-time constants.
+
+### Functions
+
+Functions are objects and have a type, ***Function***.  This means that functions can be assigned to variables or passed as arguments to other functions.
+
+```dart
+// The function still works if you omit return type
+bool isNoble(int atomicNumber) {
+  return _nobleGases[atomicNumber] != null;
+}
+```
+
+**arrow syntax**: for functions that contain just one expression
+
+```dart
+bool isNoble(int atomicNumber) => _nobleGases[atomicNumber] != null;
+```
+
+A function can have two types of parameters: **required** and **optional**. The required parameters are listed first, followed by any optional parameters. 
+
+**Optional parameters**
+
+Optional parameters can be **named** or **positional**, but not both.
+
+Define and call a function with **named parameters**
+
+```dart
+/// Sets the [bold] and [hidden] flags ...
+void enableFlags({bool bold, bool hidden}) {
+  // ...
+}
+
+// Call the function
+enableFlags({bold: true, hidden: false});
+```
+
+You can annotate a optional parameter with @***required*** to indicate that the parameter is mandatory.
+
+```dart
+import 'package:meta/meta.dart';
+
+const Scrollbar({Key key, @required Widget child})
+```
+
+Wrap a set of function parameters in [] marks them as **optional positional parameters**.
+
+```dart
+String say(String from, String msg, [String device]) {
+  var result = '$from says $msg';
+  if (device != null) {
+    result = '$result with a $device';
+  }
+  return result;
+}
+
+assert(say('Bob', 'Howdy') == 'Bob says Howdy');
+assert(say('Bob', 'Howdy', 'smoke signal') ==
+    'Bob says Howdy with a smoke signal');
+```
+
+You can define **default values** for both named and positional parameters. The default values must be compile-time constants. If no default value is provided, the default value is null.
+
+```dart
+/// Sets the [bold] and [hidden] flags ...
+void enableFlags({bool bold = false, bool hidden = false}) {...}
+
+// bold will be true; hidden will be false.
+enableFlags(bold: true);
+```
+
+Set default values for positional parameters.
+
+```dart
+String say(String from, String msg,
+    [String device = 'carrier pigeon', String mood]) {
+  var result = '$from says $msg';
+  if (device != null) {
+    result = '$result with a $device';
+  }
+  if (mood != null) {
+    result = '$result (in a $mood mood)';
+  }
+  return result;
+}
+
+assert(say('Bob', 'Howdy') ==
+    'Bob says Howdy with a carrier pigeon');
+```
+
+**main() function**
+
+Every app must have a top-level main() function, which serves as the entry point to the app. The main() function returns ***void*** and has an optional ***List<String>*** parameter for arguments.
+
+```dart
+void main() {
+  querySelector('#sample_text_id')
+    ..text = 'Click me!'
+    ..onClick.listen(reverseText);
+}
+```
+
+You can use the **args library** to define and parse command-line arguments.
+
+```dart
+// Run the app like this: dart args.dart 1 test
+void main(List<String> arguments) {
+  print(arguments);
+
+  assert(arguments.length == 2);
+  assert(int.parse(arguments[0]) == 1);
+  assert(arguments[1] == 'test');
+}
+```
+
+**Functions as first-class objects**
+
+Pass a function as parameter to another function
+
+```dart
+void printElement(int element) {
+  print(element);
+}
+
+var list = [1, 2, 3];
+
+// Pass printElement as a parameter.
+list.forEach(printElement);
+```
+
+Assign a function to a variable
+
+```dart
+var loudify = (msg) => '!!! ${msg.toUpperCase()} !!!';
+assert(loudify('hello') == '!!! HELLO !!!');
+```
+
+**Anonymous functions**
+
+Create a **nameless** function called an anonymous function, or sometimes as a ***lambda*** or ***closure***.
+
+```dart
+var list = ['apples', 'bananas', 'oranges'];
+list.forEach((item) {
+  print('${list.indexOf(item)}: $item');
+});
+```
+
+Use arrow notation
+
+```dart
+list.forEach(
+    (item) => print('${list.indexOf(item)}: $item'));
+```
+
+**Lexical scope**
+
+Dart is a lexically scoped language, which means that the scope of variables is determined statically, simple by the layout of the code. You can follow the curly braces outwards to see if a variable is in scope.
+
+```dart
+bool topLevel = true;
+
+void main() {
+  var insideMain = true;
+
+  void myFunction() {
+    var insideFunction = true;
+
+    void nestedFunction() {
+      var insideNestedFunction = true;
+
+      assert(topLevel);
+      assert(insideMain);
+      assert(insideFunction);
+      assert(insideNestedFunction);
+    }
+  }
+}
+```
+
+**Lexical closures**
+
+A **closure** is a function object that has access to variables in its lexical scope, even when the function is used outside of its original scope.
+
+```dart
+/// Returns a function that adds [addBy] to the
+/// function's argument.
+Function makeAdder(num addBy) {
+  return (num i) => addBy + i;
+}
+
+void main() {
+  // Create a function that adds 2.
+  var add2 = makeAdder(2);
+
+  // Create a function that adds 4.
+  var add4 = makeAdder(4);
+
+  assert(add2(3) == 5);
+  assert(add4(3) == 7);
+}
+```
+
+**Testing functions for equality**
+
+Test top-level functions, static methods, and instance methods for equality.
+
+```dart
+void foo() {} // A top-level function
+
+class A {
+  static void bar() {} // A static method
+  void baz() {} // An instance method
+}
+
+void main() {
+  var x;
+
+  // Comparing top-level functions.
+  x = foo;
+  assert(foo == x);
+
+  // Comparing static methods.
+  x = A.bar;
+  assert(A.bar == x);
+
+  // Comparing instance methods.
+  var v = A(); // Instance #1 of A
+  var w = A(); // Instance #2 of A
+  var y = w;
+  x = w.baz;
+
+  // These closures refer to the same instance (#2),
+  // so they're equal.
+  assert(y.baz == x);
+
+  // These closures refer to different instances,
+  // so they're unequal.
+  assert(v.baz != w.baz);
+}
+```
+
+**Return values**
+
+All functions return a value. If no return value is specified, the statement  ***return null;*** is implicitly appended to the function body.
+
+```dart
+foo() {}
+
+assert(foo() == null);
+```
+
+### Operators
+
+Dart defines the operators shown in the following table.
+
+| Description              | Operator                                   |
+| ------------------------ | ------------------------------------------ |
+| unary postfix            | *expr++ expr-- () [] . ?.*                 |
+| unary prefix             | -expr !expr ~expr ++expr --expr await expr |
+| multiplicative           | * / % ~/                                   |
+| aditive                  | + -                                        |
+| shift                    | << >> >>>                                  |
+| bitwise AND OR XOR       | & \| ^                                     |
+| logical AND OR           | && \|\|                                    |
+| relational and type test | ***>= > <= < as is is!***                  |
+| equality                 | == !=                                      |
+| if null                  | ??                                         |
+| conditional              | expr1 ? expr2 : expr3                      |
+| cascade                  | ..                                         |
+| assignment               | = *= /= += -= &= ^= etc.                   |
+
+### Control flow statements
+
+You can control the flow of your Dart code.
+
+* if and else
+
+  ```dart
+  if (isRaining()) {
+    you.bringRainCoat();
+  } else if (isSnowing()) {
+    you.wearJacket();
+  } else {
+    car.putTopDown();
+  }
+  ```
+
+* for loops
+
+  ```dart
+  var message = StringBuffer('Dart is fun');
+  for (var i = 0; i < 5; i++) {
+    message.write('!');
+  }
+  ```
+
+- for-in loops
+
+  ```dart
+  var collection = [0, 1, 2];
+  for (var x in collection) {
+    print(x); // 0 1 2
+  }
+  ```
+
+- while loop
+
+  ```dart
+  while (!isDone()) {
+    doSomething();
+  }
+  ```
+
+- do-while loop
+
+  ```dart
+  do {
+    printLine();
+  } while (!atEndOfPage());
+  ```
+
+- break
+
+  ```dart
+  while (true) {
+    if (shutDownRequested()) break;
+    processIncomingRequests();
+  }
+  ```
+
+- continue
+
+  ```dart
+  for (int i = 0; i < candidates.length; i++) {
+    var candidate = candidates[i];
+    if (candidate.yearsExperience < 5) {
+      continue;
+    }
+    candidate.interview();
+  }
+  ```
+
+- switch and case
+
+  ```dart
+  var command = 'OPEN';
+  switch (command) {
+    case 'CLOSED':
+      executeClosed();
+      break;
+    case 'PENDING':
+      executePending();
+      break;
+    case 'APPROVED':
+      executeApproved();
+      break;
+    case 'DENIED':
+      executeDenied();
+      break;
+    case 'OPEN':
+      executeOpen();
+      break;
+    default:
+      executeUnknown();
+  }
+  ```
+
+  Dart does support empty ***case*** clauses, following a form of fall-through
+
+  ```dart
+  var command = 'CLOSED';
+  switch (command) {
+    case 'CLOSED': // Empty case falls through.
+    case 'NOW_CLOSED':
+      // Runs for both CLOSED and NOW_CLOSED.
+      executeNowClosed();
+      break;
+  }
+  ```
+
+- assert
+
+  Disrupt normal execution if a boolean condition is false and an ***AssertionError*** is thrown.
+
+  ```dart
+  // Make sure the variable has a non-null value.
+  assert(text != null);
+  
+  // Make sure the value is less than 100.
+  assert(number < 100);
+  
+  // Make sure this is an https URL.
+  assert(urlString.startsWith('https'));
+  ```
+
+  Attach a message to an assertion
+
+  ```dart
+  assert(urlString.startsWith('https'),
+      'URL ($urlString) should start with "https".');
+  ```
+
+  When exactly do assertions work?
+
+  - Flutter enables assertion in debug mode
+  - Development-only tools such as **dartdevc** typically enable assertions by default
+  - Some tools, such as **dart** and **dart2js**, support assertions through --enable-asserts
+
+  In production code, assertions are ignored, and the arguments to ***assert*** aren't evaluated.
+
+### Exceptions
+
+Exceptions are errors indicating that something unexpected happened. If the exception isn't caught, the **isolate** that raised the exception is suspended, and typically the isolate and its program are terminated.
+
+Dart's exceptions are unchecked exceptions. Methods do not declare which exceptions they might throw, and you are not required to catch any exception.
+
+Dart provides ***Exception*** and ***Error*** types, as well as numerous predefined subtypes. Of course, you can define your own exceptions. However, Dart programs can throw any non-null object as an exception.
+
+Throw or raise an exception
+
+```dart
+throw FormatException('Expected at least 1 section');
+throw 'Out of llamas!';
+```
+
+Because throwing an exception is an expression, you can throw exceptions in anywhere else that allows expressions
+
+```dart
+void distanceTo(Point other) => throw UnimplementedError();
+```
+
+Catching or capturing an exception stops the exception from propagating.
+
+```dart
+try {
+  breedMoreLlamas();
+} on OutOfLlamasException {
+  buyMoreLlamas();
+}
+```
+
+You can specify multiple catch clauses to catch more than one type of exception
+
+```dart
+try {
+  breedMoreLlamas();
+} on OutOfLlamasException {
+  // A specific exception
+  buyMoreLlamas();
+} on Exception catch (e) {
+  // Anything else that is an exception
+  print('Unknown exception: $e');
+} catch (e) {
+  // No specified type, handles all
+  print('Something really unknown: $e');
+}
+```
+
+Trace the stack of exceptions
+
+```dart
+try {
+  // ···
+} on Exception catch (e) {
+  print('Exception details:\n $e');
+} catch (e, s) {
+  print('Exception details:\n $e');
+  print('Stack trace:\n $s');
+}
+```
+
+Rethrow an exception
+
+```dart
+void misbehave() {
+  try {
+    dynamic foo = true;
+    print(foo++); // Runtime error
+  } catch (e) {
+    print('misbehave() partially handled ${e.runtimeType}.');
+    rethrow; // Allow callers to see the exception.
+  }
+}
+
+void main() {
+  try {
+    misbehave();
+  } catch (e) {
+    print('main() finished handling ${e.runtimeType}.');
+  }
+}
+```
+
+The cleanup code runs whether or not an exception is thrown. if the exception is not caught, it will be propagated after the cleanup code runs.
+
+```dart
+try {
+  breedMoreLlamas();
+} finally {
+  // Always clean up, even if an exception is thrown.
+  cleanLlamaStalls();
+}
+```
+
+```dart
+try {
+  breedMoreLlamas();
+} catch (e) {
+  print('Error: $e'); // Handle the exception first.
+} finally {
+  cleanLlamaStalls(); // Then clean up.
+}
+```
+
+### Classes
+
+Dart is an object-oriented language with classes and mixin-based inheritance. Every object is an instance of a class, and all classes descend from ***Object***. 
+
+* Mixin-based inheritance: a class body can be used in multiple class hierarchies
+* Extension methods: a way to add functionality to a class without changing the class or creating a subclass
+
+**Using constructors**
+
+You can create an object using a constructor. Constructor names can be either ClassName or ClassName.identifier. 
+
+```dart
+var p1 = Point(2, 2);
+var p2 = Point.fromJson({'x': 1, 'y': 2});
+```
+
+The ***new*** keyword became optional in Dart 2.
+
+```dart
+var p1 = new Point(2, 2);
+var p2 = new Point.fromJson({'x': 1, 'y': 2});
+```
+
+**Using constant constructors**
+
+To create a compile-time constant, put the ***const*** before the constructor name.
+
+```dart
+var p = const ImmutablePoint(2, 2);
+```
+
+Constructing two identical compile-time constants results in a single, canonical instance.
+
+```dart
+var a = const ImmutablePoint(1, 1);
+var b = const ImmutablePoint(1, 1);
+
+assert(identical(a, b)); // They are the same instance!
+```
+
+Within a **constant context**, you can omit the ***const*** before a constructor or literal.
+
+```dart
+// Lots of const keywords here.
+const pointAndLine = const {
+  'point': const [const ImmutablePoint(0, 0)],
+  'line': const [const ImmutablePoint(1, 10), const ImmutablePoint(-2, 11)],
+};
+```
+
+You can omit all but the first use of the const keyword.
+
+```dart
+// Only one const, which establishes the constant context.
+const pointAndLine = {
+  'point': [ImmutablePoint(0, 0)],
+  'line': [ImmutablePoint(1, 10), ImmutablePoint(-2, 11)],
+};
+```
+
+If a constant constructor is outside of a constant context and is invoked without ***const***, it creates a non-constant object.
+
+```dart
+var a = const ImmutablePoint(1, 1); // Creates a constant
+var b = ImmutablePoint(1, 1); // Does NOT create a constant
+
+assert(!identical(a, b)); // NOT the same instance!
+```
+
+**Using class members**
+
+Objects have members consisting of functions and data(methods and instance variables, respectively). When you call a method, you invoke it on an object: the method has access to that object's functions and data.
+
+Use a dot(.) to refer to an instance variable or method
+
+```dart
+var p = Point(2, 2);
+
+// Set the value of the instance variable y.
+p.y = 3;
+
+// Get the value of y.
+assert(p.y == 3);
+
+// Invoke distanceTo() on p.
+num distance = p.distanceTo(Point(4, 4));
+```
+
+Use ?. instead of . to avoid an exception when the leftmost operand is null
+
+```dart
+// If p is non-null, set its y value to 4.
+p?.y = 4;
+```
+
+**Getting an object's type**
+
+***Object.runtimeType*** property returns a ***Type*** object.
+
+```dart
+print('The type of a is ${a.runtimeType}');
+```
+
+==Up to here, you've seen how to use classes. The rest of this section shows how to implement classes.==
+
+**Instance variables**
+
+Declare instance variables in the class body. All uninitialized instance variables have the value null.
+
+All instance variables generate an implicit getter method. Non-final instance variables also generate an implicit setter method.
+
+```dart
+class Point {
+  num x; // Declare instance variable x, initially null.
+  num y; // Declare y, initially null.
+  num z = 0; // Declare z, initially 0.
+}
+
+void main() {
+  var point = Point();
+  point.x = 4; // Use the setter method for x.
+  assert(point.x == 4); // Use the getter method for x.
+  assert(point.y == null); // Values default to null.
+}
+```
+
+If you initialize an instance variable where it is declared, the value is set when the instance is created, which is before the constructor and its initializer list execute.
+
+**Constructors**
+
+Declare a constructor by creating a function with the same name as its class: the generative constructor.
+
+```dart
+class Point {
+  num x, y;
+
+  Point(num x, num y) {
+    // There's a better way to do this, stay tuned.
+    this.x = x;
+    this.y = y;
+  }
+}
+```
+
+Use this only when there is a name conflict. Otherwise, Dart style omits the this.
+
+The pattern of assigning a constructor argument to an instance variable is so common, Dart has syntactic sugar to make it easy.
+
+```dart
+class Point {
+  num x, y;
+
+  // Syntactic sugar for setting x and y
+  // before the constructor body runs.
+  Point(this.x, this.y);
+}
+```
+
+If you don't declare a constructor, a **default constructor** is provided for you. The default constructor has no arguments and invokes the no-argument constructor in the superclass.
+
+Subclasses **don't inherit** constructors from their superclass. A subclass that declares no constructors has only the  default constructor.
+
+**Named constructors**
+
+Use a named constructor to implement multiple constructors for a class or to provide extra clarity.
+
+```dart
+class Point {
+  num x, y;
+
+  Point(this.x, this.y);
+
+  // Named constructor
+  Point.origin() {
+    x = 0;
+    y = 0;
+  }
+}
+```
+
+**Initializer list**
+
+You can initialize instance variables before the constructor body runs.
+
+```dart
+// Initializer list sets instance variables before
+// the constructor body runs.
+Point.fromJson(Map<String, num> json)
+    : x = json['x'],
+      y = json['y'] {
+  print('In Point.fromJson(): ($x, $y)');
+}
+```
+
+> The right-hand side of an initializer does not have access to ***this***.
+>
+> ```dart
+> class Point {
+>   final num x;
+>   final num y;
+>   final num distanceFromOrigin;
+> 
+>   Point(x, y)
+>       : x = x,
+>         y = y,
+>         distanceFromOrigin = sqrt(x * x + y * y);
+> }
+> 
+> main() {
+>   var p = new Point(2, 3);
+>   print(p.distanceFromOrigin);
+> }
+> ```
+
+During development, you can validate inputs by using ***assert*** in the initializer list.
+
+```dart
+Point.withAssert(this.x, this.y) : assert(x >= 0) {
+  print('In Point.withAssert(): ($x, $y)');
+}
+```
+
+**Redirecting constructors**
+
+Sometimes a constructor's only purpose is to redirect to another constructor in the same class and its body is empty.
+
+```dart
+class Point {
+  num x, y;
+
+  // The main constructor for this class.
+  Point(this.x, this.y);
+
+  // Delegates to the main constructor.
+  Point.alongXAxis(num x) : this(x, 0);
+}
+```
+
+**Constant constructors**
+
+If your class produces objects that never change, you can make these objects compile-time constants.
+
+* define a ***const*** constructor
+* make sure that all instance variables are final
+
+```dart
+class ImmutablePoint {
+  static final ImmutablePoint origin =
+      const ImmutablePoint(0, 0);
+
+  final num x, y;
+
+  const ImmutablePoint(this.x, this.y);
+}
+```
+
+**Factory constructors**
+
+Implement a constructor that doesn't always create a new instance of its class.
+
+- return an instance from a cache
+- return an instance of a subtype
+
+```dart
+class Logger {
+  final String name;
+  bool mute = false;
+
+  // _cache is library-private, thanks to
+  // the _ in front of its name.
+  static final Map<String, Logger> _cache =
+      <String, Logger>{};
+
+  factory Logger(String name) {
+    return _cache.putIfAbsent(
+        name, () => Logger._internal(name));
+  }
+
+  Logger._internal(this.name);
+
+  void log(String msg) {
+    if (!mute) print(msg);
+  }
+}
+```
+
+> Factory constructors have no access to ***this***.
+
+Invoke a factory constructor just like you would any other constructor.
+
+```dart
+var logger = Logger('UI');
+logger.log('Button clicked');
+```
+
+**Invoking a non-default superclass constructor**
+
+By default, a constructor in a subclass calls the superclass's unnamed, no-argument constructor. The superclass's constructor is called at the beginning of the constructor body. If an **initializer list** is also being used, it executes before the superclass is called. In summary, the order of execution is as follows:
+
+1. initializer list
+2. superclass's no-arg constructor
+3. main class's no-arg constructor
+
+If the superclass doesn't have an unnamed, no-argument constructor, then you must manually call one of the constructors in the superclass.
+
+```dart
+class Person {
+  String firstName;
+
+  Person.fromJson(Map data) {
+    print('in Person');
+  }
+}
+
+class Employee extends Person {
+  // Person does not have a default constructor;
+  // you must call super.fromJson(data).
+  Employee.fromJson(Map data) : super.fromJson(data) {
+    print('in Employee');
+  }
+}
+
+main() {
+  var emp = new Employee.fromJson({});
+
+  // Prints:
+  // in Person
+  // in Employee
+  if (emp is Person) {
+    // Type check
+    emp.firstName = 'Bob';
+  }
+  (emp as Person).firstName = 'Bob';
+}
+```
+
+**Methods**
+
+Methods are functions that provide behavior for an object.
+
+**Instance methods**
+
+Instance methods on objects can access instance variables and ***this***.
+
+```dart
+import 'dart:math';
+
+class Point {
+  num x, y;
+
+  Point(this.x, this.y);
+
+  num distanceTo(Point other) {
+    var dx = x - other.x;
+    var dy = y - other.y;
+    return sqrt(dx * dx + dy * dy);
+  }
+}
+```
+
+**Getters and setters**
+
+Getters and setters are special methods that provide read and write access to an object's properties
+
+```dart
+class Rectangle {
+  num left, top, width, height;
+
+  Rectangle(this.left, this.top, this.width, this.height);
+
+  // Define two calculated properties: right and bottom.
+  num get right => left + width;
+  set right(num value) => left = value - width;
+  num get bottom => top + height;
+  set bottom(num value) => top = value - height;
+}
+
+void main() {
+  var rect = Rectangle(3, 4, 20, 15);
+  assert(rect.left == 3);
+  rect.right = 12;
+  assert(rect.left == -8);
+}
+```
+
+With getters and setters, you can start with instance variables, later wrapping them with methods, all without changing client code.
+
+**Abstract methods**
+
+Instance, getter, and setter methods can be abstract, defining an interface but leaving its implementation up to other classes. Abstract methods can only exist in abstract classes.
+
+```dart
+abstract class Doer {
+  // Define instance variables and methods...
+
+  void doSomething(); // Define an abstract method.
+}
+
+class EffectiveDoer extends Doer {
+  void doSomething() {
+    // Provide an implementation, so the method is not abstract here...
+  }
+}
+```
+
+**Abstract classes**
+
+Abstract classes can't be instantiated and are useful for defining interfaces, often with some implementation. If you want your abstract class to appear to be instantiable, define a factory constructor.
+
+```dart
+// This class is declared abstract and thus
+// can't be instantiated.
+abstract class AbstractContainer {
+  // Define constructors, fields, methods...
+
+  void updateChildren(); // Abstract method.
+}
+```
+
+**Implicit interfaces**
+
+Every class implicitly defines an interface containing all the instance members of the class and of any interfaces it implements. 
+
+If you want to create class A that supports class B's API without inheriting B's implementation, class A should implement the B interface.
+
+```dart
+// A person. The implicit interface contains greet().
+class Person {
+  // In the interface, but visible only in this library.
+  final _name;
+
+  // Not in the interface, since this is a constructor.
+  Person(this._name);
+
+  // In the interface.
+  String greet(String who) => 'Hello, $who. I am $_name.';
+}
+
+// An implementation of the Person interface.
+class Impostor implements Person {
+  get _name => '';
+
+  String greet(String who) => 'Hi $who. Do you know who I am?';
+}
+
+String greetBob(Person person) => person.greet('Bob');
+
+void main() {
+  print(greetBob(Person('Kathy')));
+  print(greetBob(Impostor()));
+}
+```
+
+A class implements one or more interfaces.
+
+```dart
+class Point implements Comparable, Location {...}
+```
+
+**Extending a class**
+
+Use ***extends*** to create a subclass, and ***super*** to refer to the superclass.
+
+```dart
+class Television {
+  void turnOn() {
+    _illuminateDisplay();
+    _activateIrSensor();
+  }
+  // ···
+}
+
+class SmartTelevision extends Television {
+  void turnOn() {
+    super.turnOn();
+    _bootNetworkInterface();
+    _initializeMemory();
+    _upgradeApps();
+  }
+  // ···
+}
+```
+
+Subclasses can override instance methods, getters, and setters.
+
+```dart
+class SmartTelevision extends Television {
+  @override
+  void turnOn() {...}
+  // ···
+}
+```
+
+You can override the operators
+
+```dart
+class Vector {
+  final int x, y;
+
+  Vector(this.x, this.y);
+
+  Vector operator +(Vector v) => Vector(x + v.x, y + v.y);
+  Vector operator -(Vector v) => Vector(x - v.x, y - v.y);
+
+  // Operator == and hashCode not shown. For details, see note below.
+  // ···
+}
+
+void main() {
+  final v = Vector(2, 3);
+  final w = Vector(2, 2);
+
+  assert(v + w == Vector(4, 5));
+  assert(v - w == Vector(0, 1));
+}
+```
+
+Detect or react whenever code attempts to use a non-existent method or instance variable.
+
+```dart
+class A {
+  // Unless you override noSuchMethod, using a
+  // non-existent member results in a NoSuchMethodError.
+  @override
+  void noSuchMethod(Invocation invocation) {
+    print('You tried to use a non-existent member: ' +
+        '${invocation.memberName}');
+  }
+}
+```
+
+**Extension methods**
+
+Extension methods are a way to add functionality to existing libraries.
+
+```dart
+// string_apis.dart
+extension NumberParsing on String {
+  int parseInt() {
+    return int.parse(this);
+  }
+  // ···
+}
+```
+
+```dart
+// Import a library that contains an extension on String.
+import 'string_apis.dart';
+// ···
+print('42'.padLeft(5)); // Use a String method.
+print('42'.parseInt()); // Use an extension method.
+```
+
+**Enumerated types**
+
+Enumerated types, often called enumerations or enums, are a special kind of class used to represent a fixed number of constant values.
+
+```dart
+enum Color { red, green, blud }
+```
+
+Each value in an enum has an **index** getter, which returns the zero-based position of the value in the ***enum*** declaration.
+
+```dart
+assert(Color.red.index == 0);
+assert(Color.green.index == 1);
+assert(Color.blue.index == 2);
+```
+
+Get a list of all of the values in the enum
+
+```dart
+List<Color> colors = Color.values;
+assert(colors[2] == Color.blue);
+```
+
+You can use enums in **switch statements**, and you'll get a warning if you don't handle all of the enum's values.
+
+```dart
+var aColor = Color.blue;
+
+switch (aColor) {
+  case Color.red:
+    print('Red as roses!');
+    break;
+  case Color.green:
+    print('Green as grass!');
+    break;
+  default: // Without this, you see a WARNING.
+    print(aColor); // 'Color.blue'
+}
+```
+
+**Mixins**
+
+Mixins are a way of reusing a class's code in multiple class hierarchies.
+
+To implement a mixin, create a class that extends ***Object*** and declares no constructors, or use the **mixin** instead of class if you don't use it as a regular class.
+
+```dart
+mixin Musical {
+  bool canPlayPiano = false;
+  bool canCompose = false;
+  bool canConduct = false;
+
+  void entertainMe() {
+    if (canPlayPiano) {
+      print('Playing piano');
+    } else if (canConduct) {
+      print('Waving hands');
+    } else {
+      print('Humming to self');
+    }
+  }
+}
+```
+
+Specify that only certain types can use the mixin
+
+```dart
+mixin MusicalPerformer on Musician {
+  // ···
+}
+```
+
+Use mixins
+
+```dart
+class Musician extends Performer with Musical {
+  // ···
+}
+
+class Maestro extends Person
+    with Musical, Aggressive, Demented {
+  Maestro(String maestroName) {
+    name = maestroName;
+    canConduct = true;
+  }
+}
+```
+
+**Class variables and methods**
+
+Use the ***static*** keyword to implement class-wide variables and methods.
+
+Class variables are useful for class-wide state and constants and aren't initialized until they're used.
+
+```dart
+class Queue {
+  static const initialCapacity = 16;
+  // ···
+}
+
+void main() {
+  assert(Queue.initialCapacity == 16);
+}
+```
+
+Class methods do not operate on an instance, and thus do not have access to ***this***.
+
+```dart
+import 'dart:math';
+
+class Point {
+  num x, y;
+  Point(this.x, this.y);
+
+  static num distanceBetween(Point a, Point b) {
+    var dx = a.x - b.x;
+    var dy = a.y - b.y;
+    return sqrt(dx * dx + dy * dy);
+  }
+}
+
+void main() {
+  var a = Point(2, 2);
+  var b = Point(4, 4);
+  var distance = Point.distanceBetween(a, b);
+  assert(2.8 < distance && distance < 2.9);
+  print(distance);
+}
+```
+
+### Generics
+
+The type List<E> is a generic(or parameterized) type which has a formal type parameters. By convention, most type variables have single-letter names, such as E, T, S, K, and V.
+
+**Why use generics?**
+
+Generics have benefits allowing your code to run:
+
+- with type safety
+- reduce code duplication
+
+Assign a no-string to the list is probably a mistake.
+
+```dart
+var names = List<String>();
+names.addAll(['Seth', 'Kathy', 'Lars']);
+names.add(42); // Error
+```
+
+Share a single interface and implementation between many types.
+
+```dart
+// Create an interface for caching an object
+abstract class ObjectCache {
+  Object getByKey(String key);
+  void setByKey(String key, Object value);
+}
+
+// Create an interface for caching strings
+abstract class StringCache {
+  String getByKey(String key);
+  void setByKey(String key, String value);
+}
+
+// Create a generic interface that takes a type parameter
+// T is the stand-in type. It's a placeholder that you can 
+// think of as a type that a developer will define later.
+abstract class Cache<T> {
+  T getByKey(String key);
+  void setByKey(String key, T value);
+}
+```
+
+**Using collection literals**
+
+List, set, and map literals can be parameterized. 
+
+```dart
+var names = <String>['Seth', 'Kathy', 'Lars'];
+var uniqueNames = <String>{'Seth', 'Kathy', 'Lars'};
+var pages = <String, String>{
+  'index.html': 'Homepage',
+  'robots.txt': 'Hints for web robots',
+  'humans.txt': 'We are people, not machines'
+};
+```
+
+**Using parameterized types with constructors**
+
+```dart
+var nameSet = Set<String>.from(names);
+var views = Map<int, View>();
+```
+
+**Generic collections and the types they contain**
+
+Dart generic types are reified, which means that they carry their type information around at runtime.
+
+```dart
+var names = List<String>();
+names.addAll(['Seth', 'Kathy', 'Lars']);
+print(names is List<String>); // true
+```
+
+**Restricting the parameterized type**
+
+When implementing a generic type, you might want to limit the types of its parameters.
+
+```dart
+class Foo<T extends SomeBaseClass> {
+  // Implementation goes here...
+  String toString() => "Instance of 'Foo<$T>'";
+}
+
+class Extender extends SomeBaseClass {...}
+
+var someBaseClassFoo = Foo<SomeBaseClass>();
+var extenderFoo = Foo<Extender>();
+
+var foo = Foo();
+print(foo); // Instance of 'Foo<SomeBaseClass>'
+
+// results in an error
+var foo = Foo<Object>();
+```
+
+**Using generic methods**
+
+A newer syntax, called **generic methods**, allows type arguments on methods and functions.
+
+```dart
+T first<T>(List<T> ts) {
+  // Do some initial work or error checking, then...
+  T tmp = ts[0];
+  // Do some additional checking or processing...
+  return tmp;
+}
+```
+
+The type argument can be used in several places:
+
+- In the function's return type
+- In the type of an argument
+- In the type of a local variable
+
+### Libraries and visibility
+
+The ***import*** and ***library*** directives can help you create a **modular** and **shareable** code base. Libraries not only provide APIs, but are a unit of **privacy**: identifiers that start with an **underscore**(_) are visible only inside the library. 
+
+Every Dart app is a library, even if it doesn't use a library directive. Libraries can be distributed using ***packages***.
+
+**Using libraries**
+
+Use ***import*** to specify how a namespace from one library is used in the scope of another library.
+
+```dart
+import 'dart:html';
+import 'package:test/test.dart';
+```
+
+The only required argument to import is a URI specifying the library.
+
+- built-in libraries: dart: scheme
+- other libraries: package: scheme
+- a file system path
+
+> URI stands for uniform resource identifier. URLs(uniform resource locators) are a common kind of URI.
+
+**Specifying a library prefix**
+
+If you import two libraries that have conflicting identifiers, then you an specify a prefix for one or both libraries.
+
+```dart
+import 'package:lib1/lib1.dart';
+import 'package:lib2/lib2.dart' as lib2;
+
+// Uses Element from lib1.
+Element element1 = Element();
+
+// Uses Element from lib2.
+lib2.Element element2 = lib2.Element();
+```
+
+**Importing only part of a library**
+
+If you want to use only part of a library, you can selectively import the library.
+
+```dart
+// Import only foo.
+import 'package:lib1/lib1.dart' show foo;
+
+// Import all names EXCEPT foo.
+import 'package:lib2/lib2.dart' hide foo;
+```
+
+**Implementing libraries**
+
+The advice on how to implement a library package includes:
+
+- How to organize library source code
+- How to use the ***export*** directive
+- When to use the ***part*** directive
+- When to use the ***library*** directive
+- How to use **conditional** imports and exports to implement a library that supports **multiple** platforms
+
+### Asynchrony support
+
+Dart libraries are full of functions that return ***Future*** or ***Stream*** objects. These functions are ***asynchronous***. They return after setting up a possibly time-consuming operation, without waiting for that operation to complete.
+
+The ***async*** and ***await*** keywords support asynchronous programming, letting you write asynchronous code that looks similar to synchronous code.
+
+**Handling Futures**
+
+When you need the result of a completed **Future**, you have two options.
+
+- Use async and await
+- Use the Future API
+
+Code that uses async and await is asynchronous, but it looks a lot like synchronous code.
+
+```dart
+Future checkVersion() async {
+  var version = await lookUpVersion();
+  // Do something with version
+}
+```
+
+Use try, catch, finally to handle errors and cleanup in code that uses await.
+
+```dart
+try {
+  version = await lookUpVersion();
+} catch (e) {
+  // React to inability to look up the version
+}
+```
+
+You can use await multiple times in an async function.
+
+```dart
+var entrypoint = await findEntrypoint();
+var exitCode = await runExecutable(entrypoint, args);
+await flushThenExit(exitCode);
+```
+
+In await expression, that value of expression is usually a Future; if it isn't, then the value is automatically wrapped in a Future. This Future object indicates a promise to return an object.  The await expression makes execution pause until that object is available.
+
+**Declaring async functions**
+
+An async function is a function whose body is marked with the async modifier.
+
+Adding the async keyword to a function makes it return a Future.
+
+```dart
+Future<String> lookUpVersion() async => '1.0.0';
+```
+
+If your function doesn't return a useful value, make its return type Future<void>. 
+
+Note that the function's body doesn't need to use the Future API. Dart creates the Future object if necessary.
+
+**Handling Streams**
+
+When you need to get values from a Stream, you have two options.
+
+- Use async and an asynchronous for loop(await for)
+- Use the Stream API
+
+```dart
+Future main() async {
+  // ...
+  await for (var request in requestServer) {
+    handleRequest(request);
+  }
+  // ...
+}
+```
+
+The value of *requestServer* must have type Stream. Execution proceeds as follows.
+
+1. Wait until the stream emits a value
+2. Execute the body of the for loop, with the variable set to that emitted value
+3. Repeat 1 and 2 until the stream is closed
+
+To stop listening to the stream, you can use a break or return statement, which breaks out of the for loop and unsubscribes from the stream.
+
+### Generators
+
+When you need to lazily produce a sequence of values, consider using a ***generator function***. Dart has built-in support for two kinds of generator function.
+
+### Callable classes
+
+To allow an instance of your Dart class to be called like a function, implement the ***call()*** method.
+
+```dart
+class WannabeFunction {
+  call(String a, String b, String c) => '$a $b $c!';
+}
+
+main() {
+  var wf = new WannabeFunction();
+  var out = wf("Hi","there,","gang");
+  print('$out');
+}
+```
+
+### Isolates
+
+Most computers, even on mobile platforms, have multi-core CPUs. To take advantage of all those cores, developers traditionally use shared-memory threads running concurrently. However, shared-state concurrency is error prone and can lead to complicated code.
+
+Instead of threads, all Dart code runs inside of ***isolates***. Each isolate has its own memory heap, ensuring that no isolate's state is accessible from any other isolate.
+
+### Typedefs
+
+In Dart, functions are objects, just like strings and numbers are objects.  A ***typedef***, or ***function-type alias***, gives a **function type** a name that you can use when declaring fields and return types. A typedef retains **type information** when a function type is assigned to a variable.
+
+```dart
+typedef Compare = int Function(Object a, Object b);
+
+class SortedCollection {
+  Compare compare;
+
+  SortedCollection(this.compare);
+}
+
+// Initial, broken implementation.
+int sort(Object a, Object b) => 0;
+
+void main() {
+  SortedCollection coll = SortedCollection(sort);
+  assert(coll.compare is Function);
+  assert(coll.compare is Compare);
+}
+```
+
+Because typedefs are simple aliases, they offer a way to check the type of any function.
+
+```dart
+typedef Compare<T> = int Function(T a, T b);
+
+int sort(int a, int b) => a - b;
+
+void main() {
+  assert(sort is Compare<int>); // True!
+}
+```
+
+### Metadata
+
+Use metadata to give additional information about your code. A metadata annotation begins with the character **@**, followed by either a reference to a compile-time constant or a call to a constant constructor.
+
+Two annotations are available to all Dart code: **@deprecated** and **@override**.
+
+```dart
+class Television {
+  /// _Deprecated: Use [turnOn] instead._
+  @deprecated
+  void activate() {
+    turnOn();
+  }
+
+  /// Turns the TV's power on.
+  void turnOn() {...}
+}
+```
+
+You can define your own metadata annotations.
+
+```dart
+library todo;
+
+class Todo {
+  final String who;
+  final String what;
+
+  const Todo(this.who, this.what);
+}
+```
+
+And here's an example of using that @todo annotation.
+
+```dart
+import 'todo.dart';
+
+@Todo('seth', 'make this do something')
+void doSomething() {
+  print('do something');
+}
+```
+
+Metadata can appear before a library, class, typedef, type parameter, constructor, factory, function, field, parameter, or variable declaration and before an import or export directive. You can retrieve metadata at runtime using reflection.
+
+### Comments
+
+Dart supports single-line comments, multi-line comments, and documentation comments.
+
+**Single-line comments**
+
+A single-line comment begins with **//**.
+
+```dart
+void main() {
+  // TODO: refactor into an AbstractLlamaGreetingFactory?
+  print('Welcome to my Llama farm!');
+}
+```
+
+**Multi-line comments**
+
+A multi-line comment begin with **/*** and ends with ***/**.  Multi-line comments can nest.
+
+```dart
+void main() {
+  /*
+   * This is a lot of work. Consider raising chickens.
+
+  Llama larry = Llama();
+  larry.feed();
+  larry.exercise();
+  larry.clean();
+   */
+}
+```
+
+**Documentation comments**
+
+Documentation comments are multi-line or single-line comments that begin with **///** or **/****. Using /// on consecutive lines has the same effect as a multi-line doc comment.
+
+Inside a documentation comment, using **brackets**, you can refer to classes, methods, fields, top-level variables, functions, and parameters. The names in brackets are resolved in the **lexical scope** of the documented program element.
+
+```dart
+/// A domesticated South American camelid (Lama glama).
+///
+/// Andean cultures have used llamas as meat and pack
+/// animals since pre-Hispanic times.
+class Llama {
+  String name;
+
+  /// Feeds your llama [Food].
+  ///
+  /// The typical llama eats one bale of hay per week.
+  void feed(Food food) {
+    // ...
+  }
+
+  /// Exercises your llama with an [activity] for
+  /// [timeLimit] minutes.
+  void exercise(Activity activity, int timeLimit) {
+    // ...
+  }
+}
+```
+
+In the generated documentation, [Food] becomes a link to the API docs for the Food class.
+
+To parse Dart code and generate HTML documentation, you can use the **dartdoc** tool.
+
+
+
+
+
+## **Library tour**
 
 ### dart:core
 
@@ -1563,11 +3640,19 @@ Future main() async {
 
 
 
+
+
+
+
 ## **Language cheatsheet**
+
+The Dart language is designed to be easy to learn for coders coming from other languages, but it has a few unique features. This cheatsheet written by an for Google engineers walks you through the most important of these language features.
 
 ### String interpolation
 
-- put the value of an expression inside a string by using ${expression}
+Embed the value of an expression into a string.
+
+- use ***${expression}***
 - omit the {} if the expression is an identifier
 
 ```dart
@@ -1578,9 +3663,11 @@ Future main() async {
 
 ### Null-aware operator
 
-- ??=: assign a value to a variable only if the variable is currently null
+Dart offers some handy operators for dealing with values that might be null.
 
-- ??: return the expression on its left unless that expression's value is null, in which case it evaluates and returns the expression on its right
+- ***??=***: assign a value to a variable only if the variable is currently null
+
+- ***??***: return the expression on its left unless that expression's value is null, in that case it evaluates and returns the expression on its right
 
 ```dart
 int a;    // a is null
@@ -1594,7 +3681,9 @@ print(null ?? 12);  // 12
 
 ### Conditional property access
 
-put a question mark(?) after an object that might be null to guard access to its properties or methods.
+Guard access to a property or method of an object that might be null.
+
+* ***?***: put a question mark before the dot
 
 ```dart
 myObject?.someProperty               
@@ -1610,15 +3699,13 @@ Dart has built-in support for lists, maps and sets.
 final aListOfStrings = ['one', 'two', 'three']; // List<String>
 final aSetOfStrings = {'one', 'two', 'three'};  // Set<String>
 final aMapOfStringsToInts = {                   // Map<String, int>
-    'one': 1,
-    'two': 2,
-    'three': 3,
+  'one': 1,
+  'two': 2,
+  'three': 3,
 };
 ```
 
-Dart's type inference can assign types to these variables for you. In this case, the inferred types are List<String>, Set<String>, and Map<String, int>.
-
-Or you can specify the type yourself:
+Dart's type inference can assign types to these variables for you, or you can specify the type yourself.
 
 ```dart
 final aListOfInts = <int>[];
@@ -1628,7 +3715,9 @@ final aMapOfIntToDouble = <int, double>{};
 
 ### Arrow syntax
 
-The => symbol is a way to define a function that executes the expression to its right and returns its value.
+Define a function that executes an expression and return its value.
+
+* ***=>***: the fat arrow
 
 ```dart
 // pass a function to the any() method of List
@@ -1642,7 +3731,9 @@ bool hasEmpty = aListOfStrings.any((s) => s.isEmpty);
 
 ### Cascade call
 
-use cascades(..) to perform a sequence of operations on the same object.
+Perform a sequence of operations on the same object.
+
+* ***..***: call-chain the operations on an object
 
 ```dart
 querySelector('#confirm')
@@ -1660,36 +3751,39 @@ myObject..someMethod() // return myObject
 
 ### Getter and setter
 
-You can define getters and setters whenever you need more control over a property than a simple field allows.
+More control over a property than a simple field allows
+
+* getter
+* setter
 
 ```dart
 class MyClass {
-    int _aProperty = 0;
+  int _aProperty = 0;
     
-    int get aProperty => _aProperty;
+  int get aProperty => _aProperty;
     
-    set aProperty(int value) {
-        if (value >= 0) {
-            _aProperty = value;
-        }
+  set aProperty(int value) {
+    if (value >= 0) {
+      _aProperty = value;
     }
+  }
 }
 ```
 
-You can also use a getter to define a computed property:
+Define a computed property
 
 ```dart
 class MyClass {
-    List<int> _values = [];
+  List<int> _values = [];
     
-    void addValue(int value) {
-        _value.add(value);
-    }
+  void addValue(int value) {
+    _value.add(value);
+  }
     
-    // a computed property
-    int get count {
-        return _values.length;
-    }
+  // a computed property
+  int get count {
+    return _values.length;
+  }
 }
 ```
 
@@ -1699,17 +3793,17 @@ Imagine you have a shopping cart class that keeps a private List<double> of pric
 class InvalidPriceException {}
 
 class ShoppingCart {
-    List<double> _prices = [];
+  List<double> _prices = [];
     
-    double get total => _prices.fold(0, (e, t) => e + t);
+  double get total => _prices.fold(0, (e, t) => e + t);
     
-    set prices(List<double> value) {
-        if (value.any((p) => p < 0)) {
-            throw InvalidPriceException();
-        }
-        
-        _prices = value;
+  set prices(List<double> value) {
+    if (value.any((p) => p < 0)) {
+      throw InvalidPriceException();
     }
+        
+    _prices = value;
+  }
 }
 ```
 
@@ -1717,44 +3811,44 @@ class ShoppingCart {
 
 Dart has two kinds of function parameters: positional and named.
 
--- positional parameters
+**positional parameters**
 
 ```dart
 int sumUp(int a, int b, int c) {
-    return a + b + c;
+  return a + b + c;
 }
 
 int total = sumUp(1, 2, 3);
 ```
 
-You can make these positional parameters optional by wrapping them in brackets.
+**optional positional parameters**
 
--- optional positional parameters
+You can make these positional parameters optional by wrapping them in ***brackets***.
 
 ```dart
 int sumUpToFive(int a, [int b, int c, int d, int e]) {
-    int sum = a;
-    if (b != null) sum += b;
-    if (c != null) sum += c;
-    if (d != null) sum += d;
-    if (e != null) sum += e;
-    return sum;
+  int sum = a;
+  if (b != null) sum += b;
+  if (c != null) sum += c;
+  if (d != null) sum += d;
+  if (e != null) sum += e;
+  return sum;
 }
 
 int total = sumUpToFive(1, 2);
 int total = sumUpToFive(1, 2, 3, 4, 5);
 ```
 
-Optional positional parameters are always last in a function's parameter list. Their default value is null unless you provide another default value.
+Optional positional parameters are always **last in** a function's parameter list. Their default value is null unless you provide another default value.
 
 ```dart
 int sumUpToFive(int a, [int b = 2, int c = 3, int d = 4, int e =5]) {
-    int sum = a;
-    if (b != null) sum += b;
-    if (c != null) sum += c;
-    if (d != null) sum += d;
-    if (e != null) sum += e;
-    return sum;   
+  int sum = a;
+  if (b != null) sum += b;
+  if (c != null) sum += c;
+  if (d != null) sum += d;
+  if (e != null) sum += e;
+   return sum;   
 }
 
 int total = sumUpToFive(1);
@@ -1763,7 +3857,7 @@ print(total); // 15
 
 ### Optional named parameter
 
-Using a curly brace syntax, you can define optional parameters that have names.
+Using a ***curly brace syntax***, you can define optional parameters that have names.
 
 ```dart
 void printName(String firstName, String lastName, {String suffix}) {
@@ -1784,9 +3878,9 @@ void printName(String firstName, String lastName, {String suffix =''}) {
 
 ### Exception
 
-All of exceptions are unchecked exceptions. Methods don't declare which exceptions they might throw, and you aren't required to catch any exceptions.
+All of exceptions are **unchecked exceptions**. Methods don't declare which exceptions they might throw, and you aren't required to catch any exceptions.
 
-Dart provides Exception and Error types, but you're allowed to throw any non-null object.
+Dart provides ***Exception*** and ***Error*** types, but you're allowed to throw any non-null object.
 
 ```dart
 throw Exception('Something bad happened.');
@@ -1801,16 +3895,16 @@ Use the **try**, **on** and **catch** keywords when handling exceptions.
 
 ```dart
 try {
-    breedMoreLamas();
+  breedMoreLamas();
 } on OutofLamasException {
-    // A specific exception
-    buyMoreLamas();
+  // A specific exception
+  buyMoreLamas();
 } on Exception catch(e) {
-    // Anything else that is an exception
-    print('Unknown exception: $e');
+  // Anything else that is an exception
+  print('Unknown exception: $e');
 } catch (e) {
-    // No specified type, handles all
-    print('Something really unknown: $e');
+  // No specified type, handles all
+  print('Something really unknown: $e');
 }
 ```
 
@@ -1818,10 +3912,10 @@ If you can't completely handle the exception, use **rethrow** to propagate the e
 
 ```dart
 try {
-    breedMoreLamas();
+  breedMoreLamas();
 } catch (e) {
-    print('I was just trying to breed lamas!');
-    rethrow;
+  print('I was just trying to breed lamas!');
+  rethrow;
 }
 ```
 
@@ -1829,26 +3923,28 @@ To execute code whether or not an exception is thrown, use **finally**.
 
 ```dart
 try {
-    breedMoreLamas();
+  breedMoreLamas();
 } catch (e) {
-    print('I was just trying to breed lamas!');
-    rethrow;
+  print('I was just trying to breed lamas!');
+  rethrow;
 } finally {
-    // Always clean up, even if an exception is thrown.
-    cleanLamsStalls();
+  // Always clean up, even if an exception is thrown.
+  cleanLamsStalls();
 }
 ```
 
 ### Using ***this*** in a constructor
 
-Dart provides a handy shortcut for assigning values to properties in a constructor: ***this.propertyName*** when declaring the constructor.
+Dart provides a handy shortcut for assigning values to properties in a constructor。
+
+* ***this.propertyName***：when declaring the constructor.
 
 ```dart
 class MyColor {
-    int red;
-    int green;
-    int blue;
-    MyColor(this.red, this.green, this.blue);
+  int red;
+  int green;
+  int blue;
+  MyColor(this.red, this.green, this.blue);
 }
 
 final color = MyColor(80, 80, 128);
@@ -1858,10 +3954,10 @@ This technique works for named parameters, too.
 
 ```dart
 class MyColor {
-    int red;
-    int green;
-    int blue;
-    MyColor({this.red, this.green, this.blue});
+  int red;
+  int green;
+  int blue;
+  MyColor({this.red, this.green, this.blue});
 }
 
 final color = MyColor(red:80, green:80, blue:128);
@@ -1877,25 +3973,25 @@ MyColor({this.red = 0, this.green = 0, this.blue = 0});
 
 ### Initializer list
 
-* go between the constructor's signature and its body
-* do some setup before the constructor body executes
-* eg. final fields must have values before the constructor body exectues
+Sometimes, you need to do some setup before the constructor body executes. For example, final fields must have values before the constructor body executes.
+
+Initialize list goes between the constructor's signature and its body.
 
 ```dart
 Point.fromJson(Map<String, num> json)
-    : x = json['x'],
-	  y = json['y'] {
-	print('In Point.fromJson(): ($x, $y)');          
+  : x = json['x'],
+	y = json['y'] {
+  print('In Point.fromJson(): ($x, $y)');          
 }
 ```
 
-The initializer list is also a handy place to put asserts, which run only during development.
+The initializer list is also a handy place to put **asserts**, which run only during development.
 
 ```dart
 NonNegativePoint(this.x, this.y)
-    : assert(x >= 0),
-	  assert(y >= 0) {
-	print('I just made a NonNegativePoint: ($x, $y)');
+  : assert(x >= 0),
+	assert(y >= 0) {
+  print('I just made a NonNegativePoint: ($x, $y)');
 }
 ```
 
@@ -1905,14 +4001,14 @@ To allow classes to have multiple constructors, Dart supports named constructors
 
 ```dart
 class Point {
-    num x, y;
+  num x, y;
     
-    Point(this.x, this.y);
+  Point(this.x, this.y);
     
-    Point.origin() {
-        x = 0;
-        y = 0;
-    }
+  Point.origin() {
+    x = 0;
+    y = 0;
+  }
 }
 
 // To use a named constructor, invoke it using its full name.
@@ -1929,57 +4025,63 @@ class Square extends Shape {}
 class Circle extends Shape {}
 
 class Shape {
-    Shape();
+  Shape();
     
-    factory Shape.fromTypeName(String typeName) {
-        if (typeName == 'square') return Square();
-        if (typeName == 'circle') return Circle();
+  factory Shape.fromTypeName(String typeName) {
+    if (typeName == 'square') return Square();
+    if (typeName == 'circle') return Circle();
         
-        print('I don\'t recognize $typeName');
-        return null;
-    }
+    print('I don\'t recognize $typeName');
+    return null;
+  }
 }
 ```
 
 ### Redirecting constructor
+
+Sometimes a constructor's only purpose is to redirect to another constructor in the same class.
 
 * a constructor call in its initializer list
 * no body 
 
 ```dart
 class Automobile {
-    String make;
-    String model;
-    int mpg;
+  String make;
+  String model;
+  int mpg;
     
-    // The main constructor for this class
-    Automobile(this.make, this.model, this.mpg);
+  // The main constructor for this class
+  Automobile(this.make, this.model, this.mpg);
     
-    // Delegates to the main constructor
-    Automobile.hybrid(String make, String model): this(make, model, 60);
+  // Delegates to the main constructor
+  Automobile.hybrid(String make, String model): this(make, model, 60);
     
-    // Delegates to a named constructor
-    Automobile.fancyHybrid(): this.hybrid('Futurecar', 'Mark 2');
+  // Delegates to a named constructor
+  Automobile.fancyHybrid(): this.hybrid('Futurecar', 'Mark 2');
 }
 ```
 
 ### Const constructor
 
-* objects never change after created
-* make these objects compile-time constants
+If your class produces objects that never change, you can make these objects compile-time constants.
+
 * define a const constructor
 * make sure all instance variables are final
 
 ```dart
 class ImmutablePoint {
-    final int x;
-    final int y;
+  final int x;
+  final int y;
     
-    const ImmutablePoint(this.x, this.y);
+  const ImmutablePoint(this.x, this.y);
     
-    static const ImmutablePoint origin = ImmutablePoint(0, 0);
+  static const ImmutablePoint origin = ImmutablePoint(0, 0);
 }
 ```
+
+
+
+
 
 ## **Iterable collection**
 
@@ -2533,4 +4635,44 @@ Iterable<int> naturalsDownFrom(int n) sync* {
   }
 }
 ```
+
+## Type system
+
+The Dart language is type safe.
+
+* static type checking: assigning a ***String*** to ***int*** is a compile-time error
+* runtime checks: casting an ***Object*** to a string using ***as String*** fails with a runtime error if the object isn't a string
+
+**sound typing** : ensure that a variable's value always matches the variable's static type.
+
+**type inference**: Although types are mandatory, type annotations are optional
+
+### What is soundness?
+
+Soundness is about ensuring your program can't get into certain invalid states. A sound type system means you can never get into a state where an expression evaluates to a value that doesn't match the expression's static type. For example, if an expression's static type is String, at runtime you are guaranteed to only get a string when you evaluate it.
+
+#### The benefits of soundness
+
+* revealing type-related bugs at compile time
+* more readable code
+* more maintainable code
+* better ahead of time(AOT) compilation
+
+#### Tips for passing static analysis
+
+* use sound return types when overriding methods
+* use sound parameter types when overriding methods
+* don't use a dynamic list as a typed list
+
+### Runtime checks
+
+### Type inference
+
+### Substituting types
+
+
+
+## Extension methods
+
+
 

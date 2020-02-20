@@ -360,7 +360,59 @@ assert(lineCount == null);
 
 **final and const**
 
+If you never intend to change a variable, use ***final*** or ***const***.
 
+- A final variable can be set only once
+- A const variable is a compile-time constant
+
+A final top-level or class variable is initialized the first time it's used.
+
+Create and set a final variable
+
+```dart
+final name = 'Bob'; // Without a type annotation
+final String nickname = 'Bobby';
+
+// name = 'Alice'; // Error: a final variable can only be set once.
+```
+
+> Instance variables can be final but not const. Final instance variables must be initialized before the constructor body starts.
+>
+> - at the variable declaration
+> - by a constructor parameter
+> - in the constructor's initializer list
+
+Const variables are implicitly final.  If the const variable is at the class level, mark it ***static const***.
+
+```dart
+const bar = 1000000; // Unit of pressure (dynes/cm2)
+const double atm = 1.01325 * bar; // Standard atmosphere
+```
+
+Create constant values
+
+```dart
+var foo = const [];
+
+// you can change the value of non-final, non-const variables, 
+// even if it used to have a const value
+foo = [1, 2, 3]; // Was const []
+
+final bar = const [];
+
+const baz = []; // Equivalent to `const []`
+// baz = [42]; // Error: Constant variables can't be assigned a value.
+```
+
+Define constants that use **type checks and casts**, **collection if**, and **spread operators**.
+
+```dart
+// Valid compile-time constants as of Dart 2.5.
+const Object i = 3; // Where i is a const Object with an int value...
+const list = [i as int]; // Use a typecast.
+const map = {if (i is int) i: "int"}; // Use is and collection if.
+const set = {if (list is List<int>) ...list}; // ...and a spread.
+```
 
 ### Built-in types
 
@@ -994,6 +1046,17 @@ Dart defines the operators shown in the following table.
 | conditional              | expr1 ? expr2 : expr3                      |
 | cascade                  | ..                                         |
 | assignment               | = *= /= += -= &= ^= etc.                   |
+
+-  ==: whether two objects x and y represent the same thing
+- identical(): whether two objects are the exact same object
+
+**Overridable operators**
+
+| arithmetic        | + - * / ~/ %   |
+| ----------------- | -------------- |
+| relational        | < > <= >= ==   |
+| bitwise and shift | \| ^ & ~ << >> |
+| index             | [] []=         |
 
 ### Control flow statements
 
@@ -2181,6 +2244,38 @@ To stop listening to the stream, you can use a break or return statement, which 
 
 When you need to lazily produce a sequence of values, consider using a ***generator function***. Dart has built-in support for two kinds of generator function.
 
+- **synchronous**: returns an ***Iterable*** object
+- **asynchronous**: return a **Stream** object
+
+Implement a synchronous generator function
+
+```dart
+Iterable<int> naturalsTo(int n) sync* {
+  int k = 0;
+  while (k < n) yield k++;
+}
+```
+
+Implement a asynchronous generator function
+
+```dart
+Stream<int> asynchronousNaturalsTo(int n) async* {
+  int k = 0;
+  while (k < n) yield k++;
+}
+```
+
+If your generator is recursive, you can improve its performance by using ***yield****
+
+```dart
+Iterable<int> naturalsDownFrom(int n) sync* {
+  if (n > 0) {
+    yield n;
+    yield* naturalsDownFrom(n - 1);
+  }
+}
+```
+
 ### Callable classes
 
 To allow an instance of your Dart class to be called like a function, implement the ***call()*** method.
@@ -2495,8 +2590,6 @@ var greeting =
 // greetingTemplate didn't change.
 assert(greeting != greetingTemplate);
 ```
-
-
 
 **Building a string**
 

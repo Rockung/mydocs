@@ -67,3 +67,18 @@ http://520code.net/index.php/archives/42/
 https://www.phpdever.com/2019/08/02/homebrew-replace-aliyun
 
 https://blog.csdn.net/msatergz/article/details/93241764
+
+## Docker
+
+https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors
+
+```
+sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors": ["https://z0nfaci5.mirror.aliyuncs.com"]
+}
+EOF
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```

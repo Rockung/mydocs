@@ -1,8 +1,10 @@
 # Redux
 
+Redux is a predictable state container for JavaScript apps.
+
 ## Redux Flow
 
-![redux-flow](D:\srx\mydocs\images\redux-flow.webp)
+<img src="images/redux-flow.webp" alt="redux-flow" style="zoom: 67%;" />
 
 ## The Principle
 
@@ -194,3 +196,39 @@ const createStore = (reducer) => {
 };
 ```
 
+## Middleware
+
+The reducer computes the state when the store receive an action immediately.  What about we want to do something in between? Middlewares are helpful at this situation.
+
+### Mimic
+
+We redefine the function of dispatch which can log the states before and after.
+
+```javascript
+let next = store.dispath;
+store.dispatch = function(action) {
+    console.log('old: ', store.getState());
+    next(action);
+    console.log('new', store.getState());
+}
+```
+
+### Usage
+
+```javascript
+import { applyMiddleware, createStore } from 'redux';
+import reduxLogger from 'redux-logger';
+
+const store = createStore(reducer, initial_state,
+                         applyMiddleware(thunk, promise, reduxLogger));
+```
+
+### Signature
+
+```javascript
+const middleware = ({dispatch, getState}) => next => action => {
+    console.log('middleware start');
+    next(action);
+    console.log('middleware end');
+}
+```

@@ -1,5 +1,23 @@
 # Acceleration
 
+## nvm
+
+in settings.txt
+
+```
+node_mirror: https://npm.taobao.org/mirrors/node/
+npm_mirror: https://npm.taobao.org/mirrors/npm/
+```
+
+## go
+
+环境变量
+
+```
+GO111MODULE="on"
+GOPROXY="https://goproxy.io"
+```
+
 ## Flutter
 
 ```cmd

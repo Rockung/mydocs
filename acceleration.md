@@ -100,3 +100,11 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl restart docker
 ```
+
+## Android Studio
+
+C:\Windows\System32\drivers\etc\hosts
+
+```
+203.208.41.38 dl.google.com
+```
